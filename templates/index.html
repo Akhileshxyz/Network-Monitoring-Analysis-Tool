@@ -1,1 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Monitor Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static1', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌐 Network Monitor Dashboard</h1>
+            <div class="controls">
+                <button id="scanBtn" class="btn btn-secondary">🔍 Scan Network</button>
+                <button id="startBtn" class="btn btn-primary">▶️ Start Capture</button>
+                <button id="stopBtn" class="btn btn-danger" disabled>⏹️ Stop Capture</button>
+                <button id="exportBtn" class="btn btn-success">📥 Export CSV</button>
+                <button id="resetBtn" class="btn btn-warning">🔄 Reset</button>
+            </div>
+        </header>
 
+        <!-- Quick Stats -->
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📦</div>
+                <div class="stat-info">
+                    <div class="stat-label">Total Packets</div>
+                    <div class="stat-value" id="totalPackets">0</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">💾</div>
+                <div class="stat-info">
+                    <div class="stat-label">Data Transferred</div>
+                    <div class="stat-value" id="totalData">0 MB</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🖥️</div>
+                <div class="stat-info">
+                    <div class="stat-label">Active IPs</div>
+                    <div class="stat-value" id="activeIPs">0</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⏱️</div>
+                <div class="stat-info">
+                    <div class="stat-label">Duration</div>
+                    <div class="stat-value" id="duration">00:00:00</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Network Devices -->
+        <section class="section">
+            <h2>🔍 Network Devices</h2>
+            <div id="devicesLoading" class="loading" style="display: none;">Scanning network...</div>
+            <div class="table-container">
+                <table id="devicesTable">
+                    <thead>
+                        <tr>
+                            <th>IP Address</th>
+                            <th>MAC Address</th>
+                            <th>Hostname</th>
+                        </tr>
+                    </thead>
+                    <tbody id="devicesBody">
+                        <tr>
+                            <td colspan="3" class="empty-state">Click "Scan Network" to discover devices</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Charts -->
+        <section class="charts-grid">
+            <div class="chart-container">
+                <h3>📊 Protocol Distribution</h3>
+                <canvas id="protocolChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>🔝 Top Talkers</h3>
+                <canvas id="talkersChart"></canvas>
+            </div>
+        </section>
+
+        <!-- Recent Packets -->
+        <section class="section">
+            <h2>📋 Recent Packets</h2>
+            <div class="table-container">
+                <table id="packetsTable">
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Source IP</th>
+                            <th>Source Port</th>
+                            <th>Destination IP</th>
+                            <th>Dest Port</th>
+                            <th>Protocol</th>
+                            <th>Size</th>
+                        </tr>
+                    </thead>
+                    <tbody id="packetsBody">
+                        <tr>
+                            <td colspan="7" class="empty-state">Start capture to see packets</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <footer>
+            <p>Network Monitor v1.0 | Status: <span id="status">Idle</span></p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>
