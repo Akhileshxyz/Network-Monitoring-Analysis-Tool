@@ -21,7 +21,7 @@ A Python-based network monitoring application that captures and analyzes network
 
 1. Clone the repository:
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/Akhileshxyz/Network-Monitoring-Analysis-Tool
 cd network-monitor
 ```
 
