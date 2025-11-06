@@ -2,8 +2,8 @@ from flask import Flask, render_template, jsonify, send_file
 from flask_cors import CORS
 from packet_capture import PacketCapture
 from network_scanner import NetworkScanner
-import pandas as pd
-from io import StringIO
+import csv
+from io import StringIO, BytesIO
 from datetime import datetime
 
 app = Flask(__name__)
@@ -68,20 +68,27 @@ def export_data():
     if not packets:
         return jsonify({'error': 'No data to export'}), 400
     
-    # Convert to DataFrame
-    df = pd.DataFrame(packets)
-    
-    # Create CSV
+    # Create CSV in memory
     output = StringIO()
-    df.to_csv(output, index=False)
-    output.seek(0)
+    
+    # Write CSV
+    if packets:
+        headers = packets[0].keys()
+        writer = csv.DictWriter(output, fieldnames=headers)
+        writer.writeheader()
+        writer.writerows(packets)
+    
+    # Convert to bytes for send_file
+    csv_bytes = BytesIO()
+    csv_bytes.write(output.getvalue().encode('utf-8'))
+    csv_bytes.seek(0)
     
     # Create filename with timestamp
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     filename = f'network_capture_{timestamp}.csv'
     
     return send_file(
-        StringIO(output.getvalue()),
+        csv_bytes,
         mimetype='text/csv',
         as_attachment=True,
         download_name=filename
